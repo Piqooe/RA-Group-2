@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class Gun : MonoBehaviour
@@ -6,6 +5,10 @@ public class Gun : MonoBehaviour
     public GameObject projectilePrefab;
     public Transform firePoint;
     public float fireRate = 0.2f;
+    
+    [Header("Camera Shake")]
+    public float shakeDuration = 0.1f;
+    public float shakeMagnitude = 0.1f;
 
     private float nextFireTime;
 
@@ -44,6 +47,11 @@ public class Gun : MonoBehaviour
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
             Instantiate(projectilePrefab,firePoint.position, Quaternion.Euler(0f, 0f, angle - 90f));
+
+            if (CameraShake.Instance != null)
+            {
+                CameraShake.Instance.Shake(shakeDuration, shakeMagnitude);
+            }
 
             nextFireTime = Time.time + fireRate;
         }
