@@ -1,4 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
 public class Gun : MonoBehaviour
 {
@@ -6,6 +7,10 @@ public class Gun : MonoBehaviour
     public Transform firePoint;
     public float fireRate = 0.2f;
     
+    [Header("Muzzle Flash")]
+    public GameObject muzzleFlash;
+    public float flashDuration = 0.05f;
+
     [Header("Camera Shake")]
     public float shakeDuration = 0.1f;
     public float shakeMagnitude = 0.1f;
@@ -53,7 +58,19 @@ public class Gun : MonoBehaviour
                 CameraShake.Instance.Shake(shakeDuration, shakeMagnitude);
             }
 
+            if (muzzleFlash != null)
+            {
+                StartCoroutine(ShowMuzzleFlash());
+            }
+
             nextFireTime = Time.time + fireRate;
         }
+    }
+
+    private IEnumerator ShowMuzzleFlash()
+    {
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(flashDuration);
+        muzzleFlash.SetActive(false);
     }
 }
