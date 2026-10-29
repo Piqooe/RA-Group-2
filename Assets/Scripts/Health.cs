@@ -5,27 +5,37 @@ public class Health : MonoBehaviour
 {
     public int maxHealth = 3;
     private int currentHealth;
+    private bool isDead;
 
-    private void Start()
+    public bool IsAlive => !isDead;
+
+    private void Awake()
     {
         currentHealth = maxHealth;
     }
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
+        if (isDead || damage <= 0) return;
 
-        Debug.Log(gameObject.name + " HP: " + currentHealth);
+        currentHealth -= damage;
+        Debug.Log($"[Health] {gameObject.name} terkena {damage} damage. HP: {currentHealth}/{maxHealth}");
 
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
             Die();
         }
     }
 
     private void Die()
     {
-        if (CompareTag("Enemy"))
+        if (isDead) return;
+        isDead = true;
+
+        Debug.Log($"[Health] {gameObject.name} mati (HP habis).", gameObject);
+
+        if (CompareTag("Enemy") && LevelManager.instance != null)
         {
             LevelManager.instance.AddKill();
         }

@@ -2301,6 +2301,7 @@ MonoBehaviour:
   prefab: {fileID: 2763300499431770088, guid: e08fe358dae6cb44386ea67e24e1eb41, type: 3}
   target: {fileID: 1869803407}
   spawnRadius: 10
+  minSpawnRadius: 3
   spawnInterval: 5
 --- !u!4 &721568492
 Transform:
@@ -2883,10 +2884,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de586bb6ab4507f4686cad7946d26564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
-  prefab: {fileID: 8613787512034395671, guid: eaa73f328a6366941977c00e66790207, type: 3}
+  prefab: {fileID: 734091978173745447, guid: ac53d85c8493fc447a15fe240135ba63, type: 3}
   target: {fileID: 1869803407}
   spawnRadius: 20
-  spawnInterval: 5
+  minSpawnRadius: 10
+  spawnInterval: 0.7
 --- !u!4 &1594266952
 Transform:
   m_ObjectHideFlags: 0

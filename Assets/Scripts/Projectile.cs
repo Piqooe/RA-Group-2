@@ -7,6 +7,8 @@ public class Projectile : MonoBehaviour
     public float lifeTime = 3f;
     public int damage = 1;
 
+    private bool hasHit;
+
     private void Start()
     {
         Destroy(gameObject, lifeTime);
@@ -20,17 +22,16 @@ public class Projectile : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
-        {
-            Health health = collision.GetComponent<Health>();
+        if (hasHit) return;
 
-            if (health != null)
-            {
-                health.TakeDamage(damage);
-            }
+        Health health = collision.GetComponentInParent<Health>();
 
-            Destroy(gameObject);
-        }
+        if (health == null || !health.CompareTag("Enemy")) return;
+
+        hasHit = true;
+        health.TakeDamage(damage);
+
+        Destroy(gameObject);
     }
 
 }
