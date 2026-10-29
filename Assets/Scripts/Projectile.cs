@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
     public float speed = 10f;
     public float lifeTime = 3f;
     public int damage = 1;
+    public int pierce = 0;
 
     private bool hasHit;
 
@@ -31,7 +32,11 @@ public class Projectile : MonoBehaviour
         hasHit = true;
         health.TakeDamage(damage);
 
-        Destroy(gameObject);
+            if (pierce <= 0)
+                Destroy(gameObject);
+            else
+                pierce--;
+        }
     }
 
 }

@@ -1,5 +1,5 @@
-
 using UnityEngine;
+using System;
 
 public class Health : MonoBehaviour
 {
@@ -7,7 +7,9 @@ public class Health : MonoBehaviour
     private int currentHealth;
     private bool isDead;
 
-    public bool IsAlive => !isDead;
+    public event Action<float> OnHealthChanged;
+
+    public float HealthPercentage => (float)currentHealth / maxHealth;
 
     private void Awake()
     {
@@ -16,10 +18,15 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (isDead || damage <= 0) return;
+        if (isDead || damage <= 0)
+            return;
+
+        currentHealth -= damage;
 
         currentHealth -= damage;
         Debug.Log($"[Health] {gameObject.name} terkena {damage} damage. HP: {currentHealth}/{maxHealth}");
+
+        OnHealthChanged?.Invoke(HealthPercentage);
 
         if (currentHealth <= 0)
         {
@@ -30,10 +37,7 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
-        if (isDead) return;
         isDead = true;
-
-        Debug.Log($"[Health] {gameObject.name} mati (HP habis).", gameObject);
 
         if (CompareTag("Enemy") && LevelManager.instance != null)
         {
