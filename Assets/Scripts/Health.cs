@@ -23,7 +23,8 @@ public class Health : MonoBehaviour
 
         currentHealth -= damage;
 
-        Debug.Log(gameObject.name + " HP: " + currentHealth);
+        currentHealth -= damage;
+        Debug.Log($"[Health] {gameObject.name} terkena {damage} damage. HP: {currentHealth}/{maxHealth}");
 
         OnHealthChanged?.Invoke(HealthPercentage);
 
