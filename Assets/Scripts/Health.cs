@@ -1,12 +1,16 @@
-
 using UnityEngine;
+using System;
 
 public class Health : MonoBehaviour
 {
     public int maxHealth = 3;
     private int currentHealth;
 
-    private void Start()
+    public event Action<float> OnHealthChanged;
+
+    public float HealthPercentage => (float)currentHealth / maxHealth;
+
+    private void Awake()
     {
         currentHealth = maxHealth;
     }
@@ -16,6 +20,8 @@ public class Health : MonoBehaviour
         currentHealth -= damage;
 
         Debug.Log(gameObject.name + " HP: " + currentHealth);
+
+        OnHealthChanged?.Invoke(HealthPercentage);
 
         if (currentHealth <= 0)
         {
