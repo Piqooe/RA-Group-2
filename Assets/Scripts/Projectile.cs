@@ -36,7 +36,6 @@ public class Projectile : MonoBehaviour
                 Destroy(gameObject);
             else
                 pierce--;
-        }
     }
 
 }

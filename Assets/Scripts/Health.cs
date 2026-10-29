@@ -10,6 +10,7 @@ public class Health : MonoBehaviour
     public event Action<float> OnHealthChanged;
 
     public float HealthPercentage => (float)currentHealth / maxHealth;
+    public bool IsAlive => !isDead;
 
     private void Awake()
     {
@@ -20,8 +21,6 @@ public class Health : MonoBehaviour
     {
         if (isDead || damage <= 0)
             return;
-
-        currentHealth -= damage;
 
         currentHealth -= damage;
         Debug.Log($"[Health] {gameObject.name} terkena {damage} damage. HP: {currentHealth}/{maxHealth}");
