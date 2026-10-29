@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Rifle
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: 
-  weaponSprite: {fileID: 0}
+  weaponSprite: {fileID: -5364336181470614998, guid: e824e29cda9c69249b4efef75d820cfb, type: 3}
   damage: 1
-  fireRate: 0.3
-  bulletSpeed: 10
+  fireRate: 0.1
+  bulletSpeed: 15
   bulletLifetime: 3
   bulletsPerShot: 1
-  spreadAngle: 0
+  spreadAngle: 6
   automatic: 1
   pierce: 0
-  shakeMagnitude: 0.1
+  shakeMagnitude: 0.05

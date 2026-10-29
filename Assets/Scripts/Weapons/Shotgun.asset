@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Shotgun
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: 
-  weaponSprite: {fileID: 0}
+  weaponSprite: {fileID: -4056352365346963193, guid: 345c4c6357458b6448a8fc90063d7fb6, type: 3}
   damage: 1
-  fireRate: 0.3
-  bulletSpeed: 10
-  bulletLifetime: 3
-  bulletsPerShot: 1
-  spreadAngle: 0
-  automatic: 1
+  fireRate: 0.8
+  bulletSpeed: 11
+  bulletLifetime: 0.6
+  bulletsPerShot: 7
+  spreadAngle: 30
+  automatic: 0
   pierce: 0
-  shakeMagnitude: 0.1
+  shakeMagnitude: 0.2
