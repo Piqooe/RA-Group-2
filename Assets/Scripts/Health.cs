@@ -5,6 +5,7 @@ public class Health : MonoBehaviour
 {
     public int maxHealth = 3;
     private int currentHealth;
+    private bool isDead;
 
     public event Action<float> OnHealthChanged;
 
@@ -17,6 +18,9 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (isDead || damage <= 0)
+            return;
+
         currentHealth -= damage;
 
         Debug.Log(gameObject.name + " HP: " + currentHealth);
@@ -25,13 +29,16 @@ public class Health : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
             Die();
         }
     }
 
     private void Die()
     {
-        if (CompareTag("Enemy"))
+        isDead = true;
+
+        if (CompareTag("Enemy") && LevelManager.instance != null)
         {
             LevelManager.instance.AddKill();
         }
