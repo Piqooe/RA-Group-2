@@ -7,12 +7,15 @@ public class Health : MonoBehaviour
     private int currentHealth;
     private bool isDead;
 
+    public bool IsAlive => !isDead;
+
     public event Action<float> OnHealthChanged;
 
     public float HealthPercentage => (float)currentHealth / maxHealth;
 
     private void Awake()
     {
+        maxHealth = Mathf.Max(1, maxHealth);
         currentHealth = maxHealth;
     }
 
@@ -20,8 +23,6 @@ public class Health : MonoBehaviour
     {
         if (isDead || damage <= 0)
             return;
-
-        currentHealth -= damage;
 
         currentHealth -= damage;
         Debug.Log($"[Health] {gameObject.name} terkena {damage} damage. HP: {currentHealth}/{maxHealth}");

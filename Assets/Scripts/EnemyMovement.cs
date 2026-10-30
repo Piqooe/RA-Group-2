@@ -26,7 +26,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (player == null)
+        if (player == null || rb == null)
         {
             StopMovement();
             return;

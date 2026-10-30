@@ -25,6 +25,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
+        if (enemyPrefab == null) return;
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
 
         float randomDistance = Random.Range(minDistance, maxDistance);

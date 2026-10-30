@@ -54,6 +54,9 @@ public class Gun : MonoBehaviour
     {
         if (weapons.Length == 0) return;
 
+        index = Mathf.Clamp(index, 0, weapons.Length - 1);
+        if (weapons[index] == null) return;
+
         currentIndex = index;
 
         // ganti gambar senjata kalau kartunya punya gambar
@@ -82,7 +85,8 @@ public class Gun : MonoBehaviour
 
     private void Shoot()
     {
-        if (weapons.Length == 0) return;
+        if (weapons.Length == 0 || projectilePrefab == null || firePoint == null) return;
+        if (Current == null) return;
 
         // automatic = tahan klik, kalau tidak = harus klik satu-satu
         bool wantsToFire = Current.automatic
@@ -108,10 +112,10 @@ public class Gun : MonoBehaviour
 
             // titip angka dari kartu ke peluru
             Projectile p = bullet.GetComponent<Projectile>();
-            p.damage = Current.damage;
-            p.speed = Current.bulletSpeed;
-            p.lifeTime = Current.bulletLifetime;
-            p.pierce = Current.pierce;
+            if (p != null)
+            {
+                p.Initialize(Current.damage, Current.bulletSpeed, Current.bulletLifetime, Current.pierce);
+            }
         }
 
         if (CameraShake.Instance != null)

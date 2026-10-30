@@ -11,7 +11,7 @@ public class PlayerHealthBar : MonoBehaviour
     {
         if (playerHealth == null)
         {
-            playerHealth = FindObjectOfType<Health>();
+            playerHealth = FindFirstObjectByType<Health>();
         }
     }
 
