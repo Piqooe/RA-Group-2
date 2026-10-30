@@ -23,7 +23,7 @@ public class Health : MonoBehaviour
             return;
 
         currentHealth -= damage;
-        Debug.Log($"[Health] {gameObject.name} terkena {damage} damage. HP: {currentHealth}/{maxHealth}");
+        Debug.Log(" [Health] " + gameObject.name + " terkena " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
 
         OnHealthChanged?.Invoke(HealthPercentage);
 
@@ -41,6 +41,18 @@ public class Health : MonoBehaviour
         if (CompareTag("Enemy") && LevelManager.instance != null)
         {
             LevelManager.instance.AddKill();
+        }
+
+        if (CompareTag("Player"))
+        {
+            if (GameOverUI.instance != null)
+            {
+                GameOverUI.instance.ShowGameOver();
+            }
+            else
+            {
+                Debug.LogWarning("GameOverUI instance tidak ditemukan di scene!");
+            }
         }
 
         Destroy(gameObject);
