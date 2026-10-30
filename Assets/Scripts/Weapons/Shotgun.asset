@@ -21,5 +21,8 @@ MonoBehaviour:
   bulletsPerShot: 7
   spreadAngle: 30
   automatic: 0
+  firePointPosition: {x: 1.66, y: 0}
+  shootFrames: []
+  animationFPS: 20
   pierce: 0
   shakeMagnitude: 0.2
