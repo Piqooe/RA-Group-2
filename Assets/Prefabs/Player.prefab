@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9945bc5287e50348843a02907ddcec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 3
+  maxHealth: 10
 --- !u!50 &5306423601055408343
 Rigidbody2D:
   serializedVersion: 5
