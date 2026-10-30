@@ -5,6 +5,7 @@ public class Gun : MonoBehaviour
 {
     public GameObject projectilePrefab;
     public Transform firePoint;
+    public SpriteRenderer sr;          // tarik objek WeaponSprite ke sini
 
     [Header("Daftar Senjata (isi dengan kartu)")]
     public WeaponData[] weapons;
@@ -18,14 +19,69 @@ public class Gun : MonoBehaviour
     public float shakeDuration = 0.1f;
 
     private float nextFireTime;
-    public SpriteRenderer sr;
+    private Coroutine animRoutine;
+    [Header("Preview di Edit Mode")]
+    [Range(0, 3)] public int previewIndex = 0;
+    [HideInInspector] public int lastPreviewIndex = -1;
 
     private WeaponData Current => weapons[currentIndex];
 
     private void Awake()
     {
-    if (sr == null)
-        sr = GetComponentInChildren<SpriteRenderer>();
+        if (sr == null)
+        {
+            Transform t = transform.Find("WeaponSprite");
+            if (t != null) sr = t.GetComponent<SpriteRenderer>();
+        }
+    }
+
+    // Dipanggil saat nilai di Inspector berubah (tanpa Play)
+    private void OnValidate()
+    {
+    #if UNITY_EDITOR
+        if (Application.isPlaying) return;
+        if (previewIndex == lastPreviewIndex) return;
+        lastPreviewIndex = previewIndex;
+
+        UnityEditor.EditorApplication.delayCall += () =>
+        {
+            if (this == null) return;
+            if (weapons == null || previewIndex >= weapons.Length || weapons[previewIndex] == null) return;
+
+            WeaponData w = weapons[previewIndex];
+
+            if (sr != null && w.weaponSprite != null)
+                sr.sprite = w.weaponSprite;
+
+            if (firePoint != null)
+                firePoint.localPosition = w.firePointPosition;
+        };
+    #endif
+    }
+
+    // Klik kanan atau titik tiga di header Gun (Script) untuk memakai ini
+        [ContextMenu("Simpan Fire Point ke Kartu")]
+    private void SaveFirePointToCard()
+    {
+    #if UNITY_EDITOR
+        if (weapons == null || previewIndex >= weapons.Length || weapons[previewIndex] == null) return;
+
+        WeaponData w = weapons[previewIndex];
+        UnityEditor.Undo.RecordObject(w, "Simpan Fire Point");
+        w.firePointPosition = firePoint.localPosition;
+        UnityEditor.EditorUtility.SetDirty(w);
+        UnityEditor.AssetDatabase.SaveAssets();
+
+        Debug.Log("Fire point " + w.weaponName + " disimpan: " + w.firePointPosition);
+    #endif
+    }
+
+// Titik merah penanda fire point di Scene
+    private void OnDrawGizmos()
+    {
+        if (firePoint == null) return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(firePoint.position, 0.03f);
     }
 
     private void Start()
@@ -40,7 +96,6 @@ public class Gun : MonoBehaviour
         Shoot();
     }
 
-    // Tekan angka 1, 2, 3, 4 untuk ganti senjata
     private void SwitchWeapon()
     {
         for (int i = 0; i < weapons.Length && i < 9; i++)
@@ -56,9 +111,19 @@ public class Gun : MonoBehaviour
 
         currentIndex = index;
 
-        // ganti gambar senjata kalau kartunya punya gambar
+        // hentikan animasi senjata sebelumnya
+        if (animRoutine != null)
+        {
+            StopCoroutine(animRoutine);
+            animRoutine = null;
+        }
+
+        // gambar diam
         if (sr != null && Current.weaponSprite != null)
             sr.sprite = Current.weaponSprite;
+
+        // pindahkan fire point ke ujung laras senjata ini
+        firePoint.localPosition = Current.firePointPosition;
     }
 
     private void RotateToMouse()
@@ -84,7 +149,6 @@ public class Gun : MonoBehaviour
     {
         if (weapons.Length == 0) return;
 
-        // automatic = tahan klik, kalau tidak = harus klik satu-satu
         bool wantsToFire = Current.automatic
             ? Input.GetMouseButton(0)
             : Input.GetMouseButtonDown(0);
@@ -95,7 +159,6 @@ public class Gun : MonoBehaviour
         Vector2 direction = (mousePosition - firePoint.position).normalized;
         float baseAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        // keluarkan peluru sebanyak "bulletsPerShot"
         for (int i = 0; i < Current.bulletsPerShot; i++)
         {
             float offset = Random.Range(-Current.spreadAngle / 2f, Current.spreadAngle / 2f);
@@ -106,7 +169,6 @@ public class Gun : MonoBehaviour
                 Quaternion.Euler(0f, 0f, baseAngle - 90f + offset)
             );
 
-            // titip angka dari kartu ke peluru
             Projectile p = bullet.GetComponent<Projectile>();
             p.damage = Current.damage;
             p.speed = Current.bulletSpeed;
@@ -120,7 +182,35 @@ public class Gun : MonoBehaviour
         if (muzzleFlash != null)
             StartCoroutine(ShowMuzzleFlash());
 
+        // mainkan animasi tembak
+        if (sr != null && Current.shootFrames != null && Current.shootFrames.Length > 0)
+        {
+            if (animRoutine != null) StopCoroutine(animRoutine);
+            animRoutine = StartCoroutine(PlayShootAnimation());
+        }
+
         nextFireTime = Time.time + Current.fireRate;
+    }
+
+    private IEnumerator PlayShootAnimation()
+    {
+        WeaponData w = Current;
+        Sprite[] frames = w.shootFrames;
+
+        // jangan lebih lama dari jeda tembakan, supaya senjata cepat tetap terlihat rapi
+        float frameTime = Mathf.Min(1f / w.animationFPS, w.fireRate / frames.Length);
+
+        for (int i = 0; i < frames.Length; i++)
+        {
+            sr.sprite = frames[i];
+            yield return new WaitForSeconds(frameTime);
+        }
+
+        // kembali ke gambar diam
+        if (w.weaponSprite != null)
+            sr.sprite = w.weaponSprite;
+
+        animRoutine = null;
     }
 
     private IEnumerator ShowMuzzleFlash()
