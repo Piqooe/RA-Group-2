@@ -21,7 +21,7 @@ public class WeaponData : ScriptableObject
     public Vector2 firePointPosition;  // posisi peluru keluar
 
     [Header("Animasi Tembak")]
-    public Sprite[] shootFrames;       // frame animasi tembak, urut dari awal
+    public Sprite[] shootFrames;       // frame animasi tembak (boleh kosong)
     public float animationFPS = 20f;   // kecepatan animasi
 
     [Header("Lainnya")]
